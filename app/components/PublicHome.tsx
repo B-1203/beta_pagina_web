@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { obtenerCabinas } from '../services/api';
 
 type Cabin = {
   name: string;
@@ -10,6 +11,25 @@ type Cabin = {
   tag: string;
 };
 
+type ApiCabina = {
+  Id?: number;
+  id?: number;
+  Nombre?: string;
+  nombre?: string;
+  Descripcion?: string;
+  descripcion?: string;
+  Portada?: string | null;
+  portada?: string | null;
+  Capacidad?: number | string | null;
+  capacidad?: number | string | null;
+  PrecioBase?: number | string | null;
+  precioBase?: number | string | null;
+  Estado?: string | null;
+  estado?: string | null;
+  Activa?: boolean;
+  activa?: boolean;
+};
+
 type Service = {
   number: string;
   title: string;
@@ -17,32 +37,31 @@ type Service = {
   icon: string;
 };
 
-const cabins: Cabin[] = [
-  {
-    name: 'Nido Norte',
-    detail: 'Para 2 personas · 2 horas',
-    price: '$18',
-    tag: 'Más elegida',
+function mapCabinaData(apiCabin: ApiCabina): Cabin | null {
+  const nombre = apiCabin.Nombre ?? apiCabin.nombre ?? '';
+  const descripcion = apiCabin.Descripcion ?? apiCabin.descripcion ?? 'Cabina privada';
+  const capacidad = Number(apiCabin.Capacidad ?? apiCabin.capacidad ?? 2);
+  const precioBase = Number(apiCabin.PrecioBase ?? apiCabin.precioBase ?? 0);
+  const portada = apiCabin.Portada ?? apiCabin.portada ?? '';
+  const estado = apiCabin.Estado ?? apiCabin.estado ?? 'Disponible';
+
+  if (!nombre) {
+    return null;
+  }
+
+  const normalizedNumber = Number.isFinite(capacidad) && capacidad > 0 ? capacidad : 2;
+  const normalizedPrice = Number.isFinite(precioBase) && precioBase >= 0 ? precioBase : 0;
+
+  return {
+    name: nombre,
+    detail: `Para ${normalizedNumber} ${normalizedNumber === 1 ? 'persona' : 'personas'} · 2 horas`,
+    price: `$${Math.round(normalizedPrice).toLocaleString('es-CL')}`,
     image:
+      portada ||
       'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=85',
-  },
-  {
-    name: 'Luz de Luna',
-    detail: 'Para 4 personas · 2 horas',
-    price: '$26',
-    tag: 'Privada',
-    image:
-      'https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=1200&q=85',
-  },
-  {
-    name: 'La Terraza',
-    detail: 'Para 6 personas · 3 horas',
-    price: '$38',
-    tag: 'Nueva',
-    image:
-      'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1200&q=85',
-  },
-];
+    tag: estado || 'Disponible',
+  };
+}
 
 const services: Service[] = [
   {
@@ -133,14 +152,34 @@ function CabinCard({ cabin }: { cabin: Cabin }) {
   );
 }
 
-function Cabins() {
+function Cabins({
+  cabins,
+  loading,
+  error,
+}: {
+  cabins: Cabin[];
+  loading: boolean;
+  error: string | null;
+}) {
+  const message = error ?? 'No hay cabinas disponibles en este momento.';
+
   return (
     <section className="section cabins-section" id="cabinas">
       <div className="section-heading">
         <div><p className="eyebrow"><span className="eyebrow-line" /> Elige tu atmósfera</p><h2>Tu cabina,<br /><em>tu momento.</em></h2></div>
         <p className="section-intro">Cada espacio fue pensado para que te sientas cómodo desde que cierras la puerta.</p>
       </div>
-      <div className="cabins-grid">{cabins.map((cabin) => <CabinCard cabin={cabin} key={cabin.name} />)}</div>
+      <div className="cabins-grid">
+        {loading ? (
+          <p>{'Cargando cabinas...'}</p>
+        ) : error ? (
+          <p>{message}</p>
+        ) : cabins.length === 0 ? (
+          <p>{message}</p>
+        ) : (
+          cabins.map((cabin) => <CabinCard cabin={cabin} key={cabin.name} />)
+        )}
+      </div>
       <div className="center-link"><a className="text-link" href="#cabinas">Ver todas las cabinas <Arrow /></a></div>
     </section>
   );
@@ -169,5 +208,62 @@ function Footer() {
 }
 
 export default function PublicHome() {
-  return <><Navbar /><main><Hero /><Cabins /><Services /><About /></main><Footer /></>;
+  const [cabins, setCabins] = useState<Cabin[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    async function fetchCabins() {
+      try {
+        setLoading(true);
+        setError(null);
+
+        const response = await obtenerCabinas();
+        const rawCabins = Array.isArray(response)
+          ? response
+          : Array.isArray((response as { data?: ApiCabina[] })?.data)
+            ? (response as { data: ApiCabina[] }).data
+            : [];
+
+        const mappedCabins = rawCabins
+          .map((cabin) => mapCabinaData(cabin as ApiCabina))
+          .filter((cabin): cabin is Cabin => Boolean(cabin));
+
+        if (!isMounted) {
+          return;
+        }
+
+        setCabins(mappedCabins);
+
+        if (mappedCabins.length === 0) {
+          setError('No hay cabinas disponibles en este momento.');
+        }
+      } catch (fetchError) {
+        if (!isMounted) {
+          return;
+        }
+
+        setCabins([]);
+        setError(
+          fetchError instanceof Error
+            ? fetchError.message
+            : 'No pudimos cargar las cabinas en este momento.',
+        );
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
+      }
+    }
+
+    void fetchCabins();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  return <><Navbar /><main><Hero /><Cabins cabins={cabins} loading={loading} error={error} /><Services /><About /></main><Footer /></>;
 }
