@@ -66,7 +66,7 @@ function Navbar() {
     <header className="site-header">
       <a className="brand" href="#inicio" aria-label="Cabina, inicio">
         <span className="brand-mark">C</span>
-        <span>Cabinas el Artesano<span className="brand-dot">.</span></span>
+        <span>El Artesano Beach House<span className="brand-dot">.</span></span>
       </a>
       <button
         className="menu-toggle"
@@ -93,7 +93,7 @@ function Hero() {
         <p className="eyebrow"><span className="eyebrow-line" /> Tu lugar para desconectar</p>
         <h1>Un espacio<br /><em>solo para ti.</em></h1>
         <p className="hero-text">Casa y cabinas privadas para desconectarse del mundo, celebrar, trabajar o simplemente disfrutar a la orilla del mar.</p>
-        <a className="hero-location"href="https://maps.app.goo.gl/LR3c5UnsRoxLH2EJ6"target="_blank" rel="noopener noreferrer" >
+        <a className="hero-location"href="https://maps.app.goo.gl/3uKnZF1eAVDxF74c8"target="_blank" rel="noopener noreferrer" >
   📍 Playa Lagarto, Santa Cruz, Guanacaste, Costa Rica
   <span>↗</span>
 </a>
@@ -160,12 +160,12 @@ function Footer() {
       <div className="footer-top">
         <a className="brand brand-footer" href="#inicio">
           <span className="brand-mark">C</span>
-          <span>Cabinas el Artesano<span className="brand-dot">.</span></span>
+          <span>El Artesano Beach House<span className="brand-dot">.</span></span>
         </a>
         <p>Espacios privados para vivir momentos únicos.</p>
       </div>
       <div className="footer-bottom">
-        <span>© 2024 Cabinas el Artesano</span>
+        <span>© 2026 El Artesano Beach House</span>
         <a href="mailto:hola@cabina.local">Contacto</a>
       </div>
     </footer>
