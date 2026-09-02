@@ -30,16 +30,8 @@ type ApiCabina = {
   activa?: boolean;
 };
 
-type Service = {
-  number: string;
-  title: string;
-  text: string;
-  icon: string;
-};
-
 function mapCabinaData(apiCabin: ApiCabina): Cabin | null {
   const nombre = apiCabin.Nombre ?? apiCabin.nombre ?? '';
-  const descripcion = apiCabin.Descripcion ?? apiCabin.descripcion ?? 'Cabina privada';
   const capacidad = Number(apiCabin.Capacidad ?? apiCabin.capacidad ?? 2);
   const precioBase = Number(apiCabin.PrecioBase ?? apiCabin.precioBase ?? 0);
   const portada = apiCabin.Portada ?? apiCabin.portada ?? '';
@@ -54,35 +46,14 @@ function mapCabinaData(apiCabin: ApiCabina): Cabin | null {
 
   return {
     name: nombre,
-    detail: `Para ${normalizedNumber} ${normalizedNumber === 1 ? 'persona' : 'personas'} · 2 horas`,
-    price: `$${Math.round(normalizedPrice).toLocaleString('es-CL')}`,
+    detail: `Para ${normalizedNumber} ${normalizedNumber === 1 ? 'persona' : 'personas'} · 1 noche`,
+    price: `₡${Math.round(normalizedPrice).toLocaleString('es-CR')}`,
     image:
       portada ||
       'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=85',
     tag: estado || 'Disponible',
   };
 }
-
-const services: Service[] = [
-  {
-    number: '01',
-    title: 'Audio envolvente',
-    text: 'Sonido nítido para que cada canción se sienta cerca.',
-    icon: '◒',
-  },
-  {
-    number: '02',
-    title: 'Menú en tu mesa',
-    text: 'Snacks, bebidas y favoritos de la casa sin interrumpir tu plan.',
-    icon: '✦',
-  },
-  {
-    number: '03',
-    title: 'Privacidad real',
-    text: 'Tu espacio, tu ritmo. Atención cuando la necesitas.',
-    icon: '⌁',
-  },
-];
 
 function Arrow() {
   return <span aria-hidden="true">↗</span>;
@@ -109,8 +80,6 @@ function Navbar() {
       </button>
       <nav className={`main-nav ${isOpen ? 'is-open' : ''}`} aria-label="Navegación principal">
         <a href="#cabinas" onClick={() => setIsOpen(false)}>Cabinas</a>
-        <a href="#experiencia" onClick={() => setIsOpen(false)}>La experiencia</a>
-        <a href="#info" onClick={() => setIsOpen(false)}>Encuéntranos</a>
         <a className="nav-cta" href="#cabinas" onClick={() => setIsOpen(false)}>Reserva tu cabina <Arrow /></a>
       </nav>
     </header>
@@ -123,14 +92,15 @@ function Hero() {
       <div className="hero-copy">
         <p className="eyebrow"><span className="eyebrow-line" /> Tu lugar para desconectar</p>
         <h1>Un espacio<br /><em>solo para ti.</em></h1>
-        <p className="hero-text">Cabinas privadas para cantar, celebrar, trabajar o simplemente bajar el volumen del mundo.</p>
+        <p className="hero-text">Casa y cabinas privadas para desconectarse del mundo, celebrar, trabajar o simplemente disfrutar a la orilla del mar.</p>
+        <a className="hero-location"href="https://maps.app.goo.gl/LR3c5UnsRoxLH2EJ6"target="_blank" rel="noopener noreferrer" >
+  📍 Playa Lagarto, Santa Cruz, Guanacaste, Costa Rica
+  <span>↗</span>
+</a>
+
         <a className="button button-primary" href="#cabinas">Explora las cabinas <Arrow /></a>
-        <div className="hero-note"><span>✺</span> Abierto hoy hasta las 02:00</div>
       </div>
-      <div className="hero-art" aria-label="Interior de una cabina privada" role="img">
-        <div className="hero-badge"><strong>4.9</strong><span>★ ★ ★ ★ ★</span><small>Más de 200 visitas</small></div>
-        <span className="hero-caption">La noche empieza aquí <Arrow /></span>
-      </div>
+      <div className="hero-art" aria-label="Interior de una cabina privada" role="img" />
       <div className="hero-scroll"><span>01</span><span className="scroll-line" /><span>Descubre</span></div>
     </section>
   );
@@ -180,31 +150,26 @@ function Cabins({
           cabins.map((cabin) => <CabinCard cabin={cabin} key={cabin.name} />)
         )}
       </div>
-      <div className="center-link"><a className="text-link" href="#cabinas">Ver todas las cabinas <Arrow /></a></div>
-    </section>
-  );
-}
-
-function Services() {
-  return (
-    <section className="section services-section" id="experiencia">
-      <div className="services-heading"><p className="eyebrow eyebrow-light"><span className="eyebrow-line" /> Todo lo que necesitas</p><h2>Los detalles hacen<br /><em>la diferencia.</em></h2></div>
-      <div className="services-list">{services.map((service) => <article className="service-item" key={service.number}><span className="service-icon">{service.icon}</span><span className="service-number">{service.number}</span><div><h3>{service.title}</h3><p>{service.text}</p></div><span className="service-arrow"><Arrow /></span></article>)}</div>
-    </section>
-  );
-}
-
-function About() {
-  return (
-    <section className="about-section" id="info">
-      <div className="about-image" role="img" aria-label="Amigos disfrutando una noche en Cabina" />
-      <div className="about-copy"><p className="eyebrow"><span className="eyebrow-line" /> La idea detrás de Cabina</p><h2>Menos ruido.<br /><em>Más conexión.</em></h2><p>Creemos que los mejores recuerdos aparecen cuando el teléfono deja de ser protagonista. Por eso creamos un lugar íntimo para compartir lo que importa.</p><a className="text-link" href="mailto:hola@cabina.local">Conoce más sobre nosotros <Arrow /></a><div className="location-note"><span className="location-pin">⌖</span><div><strong>Visítanos</strong><span>Av. de los Álamos 124 · Centro</span></div></div></div>
     </section>
   );
 }
 
 function Footer() {
-  return <footer className="site-footer"><div className="footer-top"><a className="brand brand-footer" href="#inicio"><span className="brand-mark">C</span><span>Cabinas el Artesano<span className="brand-dot">.</span></span></a><p>Un espacio para estar<br />presente.</p><a className="footer-booking" href="#cabinas">Reserva tu momento <Arrow /></a></div><div className="footer-bottom"><span>© 2024 Cabina</span><div><a href="#info">Instagram</a><a href="mailto:hola@cabina.local">Contacto</a><a href="#inicio">Volver arriba ↑</a></div></div></footer>;
+  return (
+    <footer className="site-footer">
+      <div className="footer-top">
+        <a className="brand brand-footer" href="#inicio">
+          <span className="brand-mark">C</span>
+          <span>Cabinas el Artesano<span className="brand-dot">.</span></span>
+        </a>
+        <p>Espacios privados para vivir momentos únicos.</p>
+      </div>
+      <div className="footer-bottom">
+        <span>© 2024 Cabinas el Artesano</span>
+        <a href="mailto:hola@cabina.local">Contacto</a>
+      </div>
+    </footer>
+  );
 }
 
 export default function PublicHome() {
@@ -265,5 +230,5 @@ export default function PublicHome() {
     };
   }, []);
 
-  return <><Navbar /><main><Hero /><Cabins cabins={cabins} loading={loading} error={error} /><Services /><About /></main><Footer /></>;
+  return <><Navbar /><main><Hero /><Cabins cabins={cabins} loading={loading} error={error} /></main><Footer /></>;
 }
