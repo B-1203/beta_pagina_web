@@ -26,12 +26,54 @@ export async function apiFetch<T>(
   return response.json();
 }
 
+export interface BuscarCabinaParams {
+  FechaEntrada?: string;
+  FechaSalida?: string;
+  Capacidad?: number;
+  PrecioMin?: number;
+  PrecioMax?: number;
+}
+
+export interface CabinasDisponiblesParams {
+  FechaEntrada: string;
+  FechaSalida: string;
+}
+
+function construirQuery(params: object) {
+  const query = new URLSearchParams();
+
+  Object.entries(params).forEach(([key, value]) => {
+    if (typeof value === 'string' || typeof value === 'number') {
+      query.set(key, String(value));
+    }
+  });
+
+  const queryString = query.toString();
+  return queryString ? `?${queryString}` : '';
+}
+
 // ==========================================
 // CABINAS
 // ==========================================
 
 export async function obtenerCabinas() {
   return apiFetch('/cabinas');
+}
+
+export async function buscarCabinas(params: BuscarCabinaParams = {}) {
+  return apiFetch(`/cabinas/buscar${construirQuery(params)}`);
+}
+
+export async function obtenerCabinasDisponibles(
+  params: CabinasDisponiblesParams,
+) {
+  return apiFetch(
+    `/cabinas/disponibles${construirQuery(params)}`,
+  );
+}
+
+export async function obtenerCabinaPorId(cabinaId: number) {
+  return apiFetch(`/cabinas/${cabinaId}`);
 }
 
 // ==========================================
