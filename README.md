@@ -20,6 +20,18 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## Galería de cabinas
+
+Las fotografías se guardan en `public/imagenes/` y sus rutas se mantienen en la propiedad `imagenes` de cada cabina en `app/data/sitio.ts`. Las fotografías actuales de Casa el Artesano están en `public/imagenes/Casa/`; los bungalows usan actualmente `public/imagenes/imagen_frontend.jpeg`.
+
+Para agregar fotos nuevas, se pueden organizar por cabina, por ejemplo:
+
+- `public/imagenes/cabinas/lagarto-01/` para Casa el Artesano
+- `public/imagenes/cabinas/lagarto-02/` para Bungalow El Artesano #1
+- `public/imagenes/cabinas/lagarto-03/` para Bungalow El Artesano #2
+
+Después, agrega cada ruta (desde `public/`, comenzando con `/imagenes/`) al arreglo `imagenes` de la cabina correspondiente en `app/data/sitio.ts`. Para reemplazar o quitar fotos, cambia ese arreglo. La galería de la portada y las fotos de la página de detalle usan la misma lista; si queda una sola foto, los controles de navegación se ocultan automáticamente. Respeta mayúsculas y minúsculas en los nombres de archivo.
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:

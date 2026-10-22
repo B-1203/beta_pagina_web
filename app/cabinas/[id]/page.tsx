@@ -35,13 +35,20 @@ export default function CabinaDetailPage() {
       </header>
 
       <section className="detail-gallery" aria-label={`Galeria de ${cabina.nombre}`}>
-        <div className="detail-main-image" style={{ backgroundImage: `url(${cabina.imagen})` }} />
+        <div
+          className="detail-main-image"
+          style={{ backgroundImage: `url(${cabina.imagenes[0]})` }}
+          role="img"
+          aria-label={`${cabina.nombre}, fotografía principal`}
+        />
         <div className="detail-thumbs">
-          {cabina.galeria.slice(0, 3).map((image, index) => (
+          {cabina.imagenes.slice(0, 3).map((image, index) => (
             <div
               key={`${cabina.id}-${index}`}
               className="detail-thumb"
               style={{ backgroundImage: `url(${image})` }}
+              role="img"
+              aria-label={`${cabina.nombre}, fotografía ${index + 2}`}
             />
           ))}
         </div>

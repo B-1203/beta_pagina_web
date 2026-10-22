@@ -2,6 +2,7 @@
 
 import { useMemo, useState, type FormEvent } from 'react';
 import { cabinas, galeria, servicios, sitio } from '../data/sitio';
+import CabinGallery from './CabinGallery';
 
 type FormState = {
   fullName: string;
@@ -220,37 +221,6 @@ export default function PublicHome() {
           </div>
         </section>
 
-        <section className="section about-section" id="quienes-somos">
-          <div className="about-image" aria-label="Fotografía del lugar" role="img" />
-
-          <div className="about-copy">
-            <p className="eyebrow">
-              <span className="eyebrow-line" />
-              Quiénes somos
-            </p>
-            <h2>
-              Un lugar pensado para <em>disfrutar.</em>
-            </h2>
-            <p>{sitio.quienesSomos}</p>
-            <p>{sitio.historia}</p>
-
-            <div className="mission-block">
-              <div>
-                <span>Misión</span>
-                <p>{sitio.mision}</p>
-              </div>
-              <div>
-                <span>Valores</span>
-                <ul>
-                  {sitio.valores.map((valor) => (
-                    <li key={valor}>{valor}</li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          </div>
-        </section>
-
         <section className="section cabins-section" id="cabinas">
           <div className="section-heading">
             <div>
@@ -270,9 +240,7 @@ export default function PublicHome() {
           <div className="cabins-grid">
             {cabinas.map((cabin) => (
               <article className="cabin-card" key={cabin.id}>
-                <div className="cabin-image" style={{ backgroundImage: `url(${cabin.imagen})` }}>
-                  <span className="image-tag">Disponible</span>
-                </div>
+                <CabinGallery cabinName={cabin.nombre} images={cabin.imagenes} />
                 <div className="cabin-card-body">
                   <div>
                     <h3>{cabin.nombre}</h3>
@@ -308,7 +276,7 @@ export default function PublicHome() {
               Todo lo necesario para <em>vivir bien.</em>
             </h2>
             <p>
-              Texto provisional: una experiencia pensada para que cada visita se sienta cómoda, tranquila y cercana a la naturaleza.
+              Una experiencia pensada para que cada visita se sienta cómoda, tranquila y cercana a la naturaleza.
             </p>
           </div>
 
@@ -369,6 +337,37 @@ export default function PublicHome() {
           </div>
         </section>
 
+             <section className="section about-section" id="quienes-somos">
+          <div className="about-image" aria-label="Fotografía del lugar" role="img" />
+
+          <div className="about-copy">
+            <p className="eyebrow">
+              <span className="eyebrow-line" />
+              Quiénes somos
+            </p>
+            <h2>
+              Un lugar pensado para <em>disfrutar.</em>
+            </h2>
+            <p>{sitio.quienesSomos}</p>
+            <p>{sitio.historia}</p>
+
+            <div className="mission-block">
+              <div>
+                <span>Misión</span>
+                <p>{sitio.mision}</p>
+              </div>
+              <div>
+                <span>Valores</span>
+                <ul>
+                  {sitio.valores.map((valor) => (
+                    <li key={valor}>{valor}</li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
         <section className="section contact-section" id="contacto">
           <div className="section-heading">
             <div>
@@ -386,17 +385,17 @@ export default function PublicHome() {
             <article className="contact-card">
               <span>WhatsApp</span>
               <strong>{sitio.telefono}</strong>
-              <p>Texto provisional: consulta disponibilidad o solicita información en cualquier momento.</p>
+              <p>Consulta disponibilidad o solicita información en cualquier momento.</p>
             </article>
             <article className="contact-card">
               <span>Correo</span>
               <strong>{sitio.correo}</strong>
-              <p>Texto provisional: envía tus dudas y te responderemos con gusto.</p>
+              <p>Envía tus dudas y te responderemos con gusto.</p>
             </article>
             <article className="contact-card">
               <span>Horario</span>
               <strong>{sitio.horario}</strong>
-              <p>Texto provisional: atención para responder consultas y coordinar tu visita.</p>
+              <p>Atención para responder consultas y coordinar tu visita.</p>
             </article>
           </div>
         </section>

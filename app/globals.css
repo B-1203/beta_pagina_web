@@ -392,10 +392,211 @@ h3 {
   background: center/cover no-repeat;
 }
 
+.cabin-carousel {
+  overflow: hidden;
+  touch-action: pan-y;
+  isolation: isolate;
+}
+
+.cabin-carousel-track {
+  display: flex;
+  height: 100%;
+  min-height: 300px;
+  transition: transform 0.35s ease;
+}
+
+.cabin-carousel-slide {
+  position: relative;
+  flex: 0 0 100%;
+  min-width: 0;
+  min-height: 300px;
+}
+
+.cabin-image-trigger {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  background: transparent;
+  cursor: zoom-in;
+}
+
+.cabin-image-trigger img,
+.cabin-lightbox-image img {
+  object-fit: cover;
+}
+
+.cabin-image-trigger:focus-visible,
+.cabin-carousel-arrow:focus-visible,
+.cabin-carousel-dot:focus-visible,
+.cabin-lightbox button:focus-visible {
+  outline: 3px solid var(--caramel);
+  outline-offset: 3px;
+}
+
+.cabin-carousel-arrow,
+.cabin-lightbox-arrow,
+.cabin-lightbox-close {
+  position: absolute;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  border-radius: 50%;
+  background: rgba(27, 42, 42, 0.58);
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.cabin-carousel-arrow:hover,
+.cabin-lightbox-arrow:hover,
+.cabin-lightbox-close:hover {
+  background: rgba(27, 42, 42, 0.85);
+  transform: scale(1.05);
+}
+
+.cabin-carousel-arrow span,
+.cabin-lightbox-arrow span {
+  margin-top: -4px;
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.cabin-carousel-arrow-previous {
+  top: 50%;
+  left: 12px;
+  transform: translateY(-50%);
+}
+
+.cabin-carousel-arrow-previous:hover {
+  transform: translateY(-50%) scale(1.05);
+}
+
+.cabin-carousel-arrow-next {
+  top: 50%;
+  right: 12px;
+  transform: translateY(-50%);
+}
+
+.cabin-carousel-arrow-next:hover {
+  transform: translateY(-50%) scale(1.05);
+}
+
+.cabin-carousel-status,
+.cabin-lightbox-status {
+  position: absolute;
+  z-index: 2;
+  right: 14px;
+  bottom: 14px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(27, 42, 42, 0.62);
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.cabin-carousel-dots {
+  position: absolute;
+  z-index: 2;
+  bottom: 18px;
+  left: 50%;
+  display: flex;
+  gap: 7px;
+  transform: translateX(-50%);
+}
+
+.cabin-carousel-dot {
+  width: 8px;
+  height: 8px;
+  padding: 0;
+  border: 1px solid #fff;
+  border-radius: 50%;
+  background: rgba(27, 42, 42, 0.35);
+  cursor: pointer;
+}
+
+.cabin-carousel-dot.is-active {
+  background: #fff;
+}
+
+.cabin-lightbox {
+  position: fixed;
+  z-index: 100;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 4rem 5rem;
+  background: rgba(10, 16, 16, 0.9);
+}
+
+.cabin-lightbox-dialog {
+  position: relative;
+  width: min(100%, 1440px);
+  height: min(100%, 900px);
+  display: grid;
+  place-items: center;
+  touch-action: pan-y;
+}
+
+.cabin-lightbox-image {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+}
+
+.cabin-lightbox-image img {
+  object-fit: contain;
+}
+
+.cabin-lightbox-close {
+  top: 0;
+  right: 0;
+  width: 44px;
+  height: 44px;
+}
+
+.cabin-lightbox-close span {
+  font-size: 1.8rem;
+  line-height: 1;
+}
+
+.cabin-lightbox-arrow {
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.cabin-lightbox-arrow:hover {
+  transform: translateY(-50%) scale(1.05);
+}
+
+.cabin-lightbox-arrow-previous {
+  left: -54px;
+}
+
+.cabin-lightbox-arrow-next {
+  right: -54px;
+}
+
+.cabin-lightbox-status {
+  right: 0;
+  bottom: -2.5rem;
+}
+
 .image-tag {
   position: absolute;
   left: 18px;
   top: 18px;
+  z-index: 1;
   display: inline-flex;
   padding: 8px 10px;
   background: rgba(255, 255, 255, 0.86);
@@ -1104,6 +1305,18 @@ h3 {
     grid-template-columns: 1fr;
   }
 
+  .cabin-lightbox {
+    padding: 4rem 3.5rem;
+  }
+
+  .cabin-lightbox-arrow-previous {
+    left: -42px;
+  }
+
+  .cabin-lightbox-arrow-next {
+    right: -42px;
+  }
+
   .section-heading,
   .footer-top,
   .footer-bottom {
@@ -1144,6 +1357,18 @@ h3 {
 
   .detail-service-list ul {
     grid-template-columns: 1fr;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cabin-carousel-track {
+      transition: none;
+    }
+
+    .cabin-carousel-arrow,
+    .cabin-lightbox-arrow,
+    .cabin-lightbox-close {
+      transition: none;
+    }
   }
 
   .about-copy {

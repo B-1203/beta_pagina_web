@@ -7,8 +7,7 @@ export type Cabina = {
   banos: number;
   precio: string;
   servicios: string[];
-  imagen: string;
-  galeria: string[];
+  imagenes: string[];
   infoAdicional: string;
 };
 
@@ -22,13 +21,13 @@ export const sitio = {
   nombreNegocio: 'EL ARTESANO BEACH HOUSE',
   lema: 'Tu pausa ideal en la costa de Guanacaste',
   descripcionBreve:
-    'Texto provisional: un refugio tranquilo para descansar, disfrutar de la naturaleza y vivir una experiencia cercana al mar en Playa Lagarto.',
+    'Un refugio tranquilo para descansar, disfrutar de la naturaleza y vivir una experiencia cercana al mar en Playa Lagarto.',
   quienesSomos:
-    'Texto provisional: somos anfitriones locales que cuidamos cada detalle para que cada huésped viva una estadía cómoda, auténtica y relajante.',
+    'Somos anfitriones locales que cuidamos cada detalle para que cada huésped viva una estadía cómoda, auténtica y relajante.',
   historia:
-    'Texto provisional: el proyecto nació para compartir la belleza de la zona con viajeros que buscan desconectarse y disfrutar de un alojamiento con carácter local.',
+    'El proyecto nació para compartir la belleza de la zona con viajeros que buscan desconectarse y disfrutar de un alojamiento con carácter local.',
   mision:
-    'Texto provisional: brindar una experiencia cálida, personalizada y memorable, con espacios inspirados en la tranquilidad del paisaje costarricense.',
+    'Brindar una experiencia cálida, personalizada y memorable, con espacios inspirados en la tranquilidad del paisaje costarricense.',
   valores: ['Atención cercana', 'Calidez humana', 'Naturaleza y descanso'],
   ubicacion: 'Playa Lagarto, Santa Cruz, Guanacaste, Costa Rica',
   mapsUrl:
@@ -44,32 +43,32 @@ export const sitio = {
 export const servicios: Servicio[] = [
   {
     titulo: 'Cocina equipada',
-    descripcion: 'Texto provisional: espacio cómodo para preparar desayunos, cenas sencillas y momentos de convivencia.',
+    descripcion: 'Espacio cómodo para preparar desayunos, cenas sencillas y momentos de convivencia.',
     icono: '🍳',
   },
   {
     titulo: 'Wi‑Fi',
-    descripcion: 'Texto provisional: conexión para trabajar o relajarse desde una vista serena y tranquila.',
+    descripcion: 'Conexión para trabajar o relajarse desde una vista serena y tranquila.',
     icono: '📶',
   },
   {
     titulo: 'Aire acondicionado',
-    descripcion: 'Texto provisional: confort durante los días más calurosos de la zona.',
+    descripcion: 'Confort durante los días más calurosos de la zona.',
     icono: '❄️',
   },
   {
     titulo: 'Terraza o patio',
-    descripcion: 'Texto provisional: área exterior para tomar aire fresco y vivir la experiencia de la costa.',
+    descripcion: 'Área exterior para tomar aire fresco y vivir la experiencia de la costa.',
     icono: '🌿',
   },
   {
     titulo: 'Parqueo',
-    descripcion: 'Texto provisional: facilidad para llegar con tu vehículo y disfrutar sin complicaciones.',
+    descripcion: 'Facilidad para llegar con tu vehículo y disfrutar sin complicaciones.',
     icono: '🚗',
   },
   {
     titulo: 'Atención personalizada',
-    descripcion: 'Texto provisional: apoyo cercano para ayudarte a preparar la mejor experiencia según tus necesidades.',
+    descripcion: 'Apoyo cercano para ayudarte a preparar la mejor experiencia según tus necesidades.',
     icono: '🤝',
   },
 ];
@@ -77,10 +76,11 @@ export const servicios: Servicio[] = [
 export const galeria: string[] = [
   '/imagenes/inicio.jpg',
   '/imagenes/Galeria/info_mascotas.jpg',
-  '/imagenes/imagen_frontend.jpeg',
-  '/imagenes/imagen_frontend.jpeg',
-  '/imagenes/imagen_frontend.jpeg',
-  '/imagenes/imagen_frontend.jpeg',
+  '/imagenes/Galeria/ARDILLA.jpeg',
+  '/imagenes/Galeria/ATARDECER.jpeg',
+  '/imagenes/Galeria/CONGOS.jpeg',
+  '/imagenes/Galeria/PARRILLA.jpeg',
+  '/imagenes/Galeria/DRON.jpeg',
 ];
 
 export const cabinas: Cabina[] = [
@@ -94,13 +94,17 @@ export const cabinas: Cabina[] = [
     banos: 2,
     precio: '₡50,000 X noche',
     servicios: ['Cocina equipada', 'Wi‑Fi', 'TV'],
-    imagen: '/imagenes/Casa/imagen_artesano.jpg',
-    galeria: [
-      '/imagenes/Casa/imagen_artesano.jpg',
+    imagenes: [
+      '/imagenes/Casa/Imagen_artesano.jpg',
       '/imagenes/Casa/artesano_cocina.jpg',
       '/imagenes/Casa/bano_habitacion_principal.jpg',
       '/imagenes/Casa/artesano_habitacion_principal.jpg',
       '/imagenes/Casa/artesano_habitacion2.jpg',
+      '/imagenes/Casa/Banos2.jpeg',
+      '/imagenes/Casa/Amaca.jpeg',
+      '/imagenes/Casa/Entrada.jpeg',
+      '/imagenes/Casa/Exterior.jpeg',
+      '/imagenes/Casa/CASA.jpeg',
     ],
     infoAdicional: 'Texto provisional: disponible para estadías cortas o largas según la temporada.',
   },
@@ -114,12 +118,12 @@ export const cabinas: Cabina[] = [
     banos: 1,
     precio: 'Consultar precio',
     servicios: ['Patio', 'Parqueo', 'Atención personalizada'],
-    imagen: '/imagenes/imagen_frontend.jpeg',
-    galeria: [
-      '/imagenes/imagen_frontend.jpeg',
-      '/imagenes/imagen_frontend.jpeg',
-      '/imagenes/imagen_frontend.jpeg',
-    ],
+    imagenes: ['/imagenes/CABINA/BUNGALOW.jpeg',
+      '/imagenes/CABINA/CAMA.jpeg',
+      '/imagenes/CABINA/EXTERIOR.jpeg',
+      '/imagenes/CABINA/INTERIOR_BUNGALOW.jpeg',
+      '/imagenes/CABINA/INTERIOR.jpeg',
+      '/imagenes/CABINA/BONGALOW_NOCHE.jpeg'],
     infoAdicional: 'Texto provisional: ideal para estancias de descanso o viajes de trabajo remoto.',
   },
   {
@@ -132,11 +136,12 @@ export const cabinas: Cabina[] = [
     banos: 2,
     precio: 'Consultar precio',
     servicios: ['Terraza', 'Cocina', 'Wi‑Fi'],
-    imagen: '/imagenes/imagen_frontend.jpeg',
-    galeria: [
-      '/imagenes/imagen_frontend.jpeg',
-      '/imagenes/imagen_frontend.jpeg',
-      '/imagenes/imagen_frontend.jpeg',
+    imagenes: ['/imagenes/CABINA/BONGALOW_NOCHE.jpeg',
+      '/imagenes/CABINA/CAMA.jpeg',
+      '/imagenes/CABINA/EXTERIOR.jpeg',
+      '/imagenes/CABINA/INTERIOR_BUNGALOW.jpeg',
+      '/imagenes/CABINA/INTERIOR.jpeg',
+      '/imagenes/CABINA/BUNGALOW.jpeg'
     ],
     infoAdicional: 'Texto provisional: el espacio se puede adaptar según la cantidad de huéspedes y la temporada.',
   },
