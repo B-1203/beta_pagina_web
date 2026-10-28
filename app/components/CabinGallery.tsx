@@ -3,11 +3,11 @@
 import Image from 'next/image';
 import {
   useCallback,
-  useEffect,
   useRef,
   useState,
   type PointerEvent,
 } from 'react';
+import PhotoLightbox from './PhotoLightbox';
 
 type CabinGalleryProps = {
   cabinName: string;
@@ -29,12 +29,11 @@ function getImageAlt(image: string, cabinName: string, index: number) {
 export default function CabinGallery({ cabinName, images }: CabinGalleryProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
-  const closeButtonRef = useRef<HTMLButtonElement>(null);
   const imageButtonRef = useRef<HTMLButtonElement>(null);
   const returnFocusRef = useRef<HTMLButtonElement | null>(null);
   const swipeStartRef = useRef<number | null>(null);
   const imageCount = images.length;
-  const activeImage = images[activeIndex];
+  const closeLightbox = useCallback(() => setIsLightboxOpen(false), []);
 
   const showPrevious = useCallback(() => {
     setActiveIndex((index) => (index - 1 + imageCount) % imageCount);
@@ -68,50 +67,6 @@ export default function CabinGallery({ cabinName, images }: CabinGalleryProps) {
       }
     }
   };
-
-  useEffect(() => {
-    if (!isLightboxOpen) {
-      return;
-    }
-
-    const previousOverflow = document.body.style.overflow;
-    const returnFocus = returnFocusRef.current;
-    document.body.style.overflow = 'hidden';
-    closeButtonRef.current?.focus();
-
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        setIsLightboxOpen(false);
-      } else if (event.key === 'ArrowLeft' && imageCount > 1) {
-        event.preventDefault();
-        showPrevious();
-      } else if (event.key === 'ArrowRight' && imageCount > 1) {
-        event.preventDefault();
-        showNext();
-      } else if (event.key === 'Tab') {
-        const focusableElements = document.querySelectorAll<HTMLElement>(
-          '.cabin-lightbox button:not(:disabled)',
-        );
-        const firstElement = focusableElements[0];
-        const lastElement = focusableElements[focusableElements.length - 1];
-
-        if (event.shiftKey && document.activeElement === firstElement) {
-          event.preventDefault();
-          lastElement?.focus();
-        } else if (!event.shiftKey && document.activeElement === lastElement) {
-          event.preventDefault();
-          firstElement?.focus();
-        }
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => {
-      document.body.style.overflow = previousOverflow;
-      window.removeEventListener('keydown', handleKeyDown);
-      returnFocus?.focus();
-    };
-  }, [imageCount, isLightboxOpen, showNext, showPrevious]);
 
   if (imageCount === 0) {
     return <div className="cabin-image" aria-label={`Sin fotografías de ${cabinName}`} />;
@@ -204,75 +159,17 @@ export default function CabinGallery({ cabinName, images }: CabinGalleryProps) {
         )}
       </div>
 
-      {isLightboxOpen && activeImage && (
-        <div
-          className="cabin-lightbox"
-          role="presentation"
-          onClick={(event) => {
-            if (event.target === event.currentTarget) {
-              setIsLightboxOpen(false);
-            }
-          }}
-        >
-          <div
-            className="cabin-lightbox-dialog"
-            role="dialog"
-            aria-modal="true"
-            aria-label={`Galería de ${cabinName}`}
-            onPointerDown={handlePointerDown}
-            onPointerUp={handlePointerUp}
-            onPointerCancel={() => {
-              swipeStartRef.current = null;
-            }}
-          >
-            <button
-              className="cabin-lightbox-close"
-              type="button"
-              aria-label="Cerrar galería"
-              onClick={() => setIsLightboxOpen(false)}
-              ref={closeButtonRef}
-            >
-              <span aria-hidden="true">×</span>
-            </button>
-
-            {imageCount > 1 && (
-              <button
-                className="cabin-lightbox-arrow cabin-lightbox-arrow-previous"
-                type="button"
-                aria-label={`Fotografía anterior de ${cabinName}`}
-                onClick={showPrevious}
-              >
-                <span aria-hidden="true">‹</span>
-              </button>
-            )}
-
-            <div className="cabin-lightbox-image">
-              <Image
-                src={activeImage}
-                alt={getImageAlt(activeImage, cabinName, activeIndex)}
-                fill
-                sizes="100vw"
-                priority
-              />
-            </div>
-
-            {imageCount > 1 && (
-              <button
-                className="cabin-lightbox-arrow cabin-lightbox-arrow-next"
-                type="button"
-                aria-label={`Siguiente fotografía de ${cabinName}`}
-                onClick={showNext}
-              >
-                <span aria-hidden="true">›</span>
-              </button>
-            )}
-
-            <span className="cabin-lightbox-status" aria-live="polite" aria-atomic="true">
-              {activeIndex + 1} / {imageCount}
-            </span>
-          </div>
-        </div>
-      )}
+      <PhotoLightbox
+        title={cabinName}
+        images={images}
+        activeIndex={activeIndex}
+        isOpen={isLightboxOpen}
+        onClose={closeLightbox}
+        onPrevious={showPrevious}
+        onNext={showNext}
+        getAlt={(image, index) => getImageAlt(image, cabinName, index)}
+        returnFocusRef={returnFocusRef}
+      />
     </>
   );
 }

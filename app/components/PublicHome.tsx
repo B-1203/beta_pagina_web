@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { useMemo, useState, type FormEvent } from 'react';
 import { cabinas, galeria, servicios, sitio } from '../data/sitio';
 import CabinGallery from './CabinGallery';
+import Gallery from './Gallery';
 
 type FormState = {
   fullName: string;
@@ -338,11 +339,7 @@ export default function PublicHome() {
             </div>
           </div>
 
-          <div className="gallery-grid">
-            {galeria.map((image, index) => (
-              <div key={`${image}-${index}`} className={`gallery-item gallery-item-${index + 1}`} style={{ backgroundImage: `url(${image})` }} aria-label="Fotografía del lugar" role="img" />
-            ))}
-          </div>
+          <Gallery images={galeria} />
         </section>
 
              <section className="section about-section" id="quienes-somos">
