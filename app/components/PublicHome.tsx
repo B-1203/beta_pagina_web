@@ -26,6 +26,10 @@ const today = new Date();
 const todayISO = new Date(today.getTime() - today.getTimezoneOffset() * 60000)
   .toISOString()
   .slice(0, 10);
+const MAX_NAME_LENGTH = 100;
+const MAX_PHONE_LENGTH = 30;
+const MAX_EMAIL_LENGTH = 254;
+const MAX_NOTES_LENGTH = 1000;
 
 const socialNetworks = [
   { name: 'Facebook', url: redesSociales.facebook, Icon: FaFacebook },
@@ -68,35 +72,64 @@ export default function PublicHome() {
 
   const validateForm = (): FormErrors => {
     const nextErrors: FormErrors = {};
+    const fullName = form.fullName.trim();
+    const phone = form.phone.trim();
+    const email = form.email.trim();
+    const notes = form.notes.trim();
     const adultsValue = Number(form.adults);
     const childrenValue = Number(form.children || '0');
+    const selectedCabinForValidation = cabinas.find((cabin) => cabin.id === form.cabinId);
 
-    if (!form.fullName.trim()) {
+    if (!fullName) {
       nextErrors.fullName = 'Escribe tu nombre completo.';
+    } else if (fullName.length > MAX_NAME_LENGTH) {
+      nextErrors.fullName = `El nombre no puede superar los ${MAX_NAME_LENGTH} caracteres.`;
     }
 
-    if (!form.phone.trim()) {
+    if (!phone) {
       nextErrors.phone = 'Ingresa un número de teléfono.';
+    } else if (
+      phone.length > MAX_PHONE_LENGTH ||
+      !/^[0-9+().\s-]+$/.test(phone) ||
+      phone.replace(/\D/g, '').length < 8
+    ) {
+      nextErrors.phone = 'Ingresa un número de teléfono válido.';
     }
 
-    if (form.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
+    if (email && (email.length > MAX_EMAIL_LENGTH || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))) {
       nextErrors.email = 'Ingresa un correo electrónico válido.';
     }
 
-    if (!form.checkIn) {
+    if (!selectedCabinForValidation) {
+      nextErrors.cabinId = 'Selecciona una cabina válida.';
+    }
+
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(form.checkIn)) {
       nextErrors.checkIn = 'Selecciona la fecha de entrada.';
     } else {
       const entryDate = new Date(`${form.checkIn}T00:00:00`);
       const todayDate = new Date(`${todayISO}T00:00:00`);
-      if (entryDate < todayDate) {
+      if (
+        Number.isNaN(entryDate.getTime()) ||
+        entryDate.toISOString().slice(0, 10) !== form.checkIn ||
+        entryDate < todayDate
+      ) {
         nextErrors.checkIn = 'La fecha de entrada no puede ser anterior al día actual.';
       }
     }
 
-    if (!form.checkOut) {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(form.checkOut)) {
       nextErrors.checkOut = 'Selecciona la fecha de salida.';
-    } else if (form.checkIn && form.checkOut <= form.checkIn) {
-      nextErrors.checkOut = 'La salida debe ser posterior a la entrada.';
+    } else {
+      const exitDate = new Date(`${form.checkOut}T00:00:00`);
+      if (
+        Number.isNaN(exitDate.getTime()) ||
+        exitDate.toISOString().slice(0, 10) !== form.checkOut
+      ) {
+        nextErrors.checkOut = 'Selecciona una fecha de salida válida.';
+      } else if (form.checkIn && form.checkOut <= form.checkIn) {
+        nextErrors.checkOut = 'La salida debe ser posterior a la entrada.';
+      }
     }
 
     if (!Number.isInteger(adultsValue) || adultsValue < 1) {
@@ -105,6 +138,19 @@ export default function PublicHome() {
 
     if (!Number.isInteger(childrenValue) || childrenValue < 0) {
       nextErrors.children = 'La cantidad de niños debe ser válida.';
+    }
+
+    if (
+      selectedCabinForValidation &&
+      Number.isInteger(adultsValue) &&
+      Number.isInteger(childrenValue) &&
+      adultsValue + childrenValue > selectedCabinForValidation.capacidad
+    ) {
+      nextErrors.adults = `La capacidad máxima es de ${selectedCabinForValidation.capacidad} huéspedes.`;
+    }
+
+    if (notes.length > MAX_NOTES_LENGTH) {
+      nextErrors.notes = `Los comentarios no pueden superar los ${MAX_NOTES_LENGTH} caracteres.`;
     }
 
     if (!form.privacyAccepted) {
@@ -125,18 +171,22 @@ export default function PublicHome() {
 
     const formattedPhone = sitio.whatsappHost.replace(/\D/g, '');
     const cabinName = selectedCabin?.nombre ?? 'cabina seleccionada';
+    const fullName = form.fullName.trim();
+    const phone = form.phone.trim();
+    const email = form.email.trim();
+    const notes = form.notes.trim();
     const message = [
       `Hola ${sitio.nombreNegocio},`,
       `Me gustaría consultar disponibilidad para la ${cabinName}.`,
       '',
-      `Nombre: ${form.fullName}`,
-      `Teléfono: ${form.phone}`,
-      form.email ? `Correo: ${form.email}` : undefined,
+      `Nombre: ${fullName}`,
+      `Teléfono: ${phone}`,
+      email ? `Correo: ${email}` : undefined,
       `Fecha de entrada: ${form.checkIn}`,
       `Fecha de salida: ${form.checkOut}`,
       `Adultos: ${form.adults}`,
       `Niños: ${form.children || '0'}`,
-      form.notes ? `Comentarios: ${form.notes}` : undefined,
+      notes ? `Comentarios: ${notes}` : undefined,
       '',
       'Gracias.',
     ]
@@ -154,8 +204,8 @@ export default function PublicHome() {
           <Image
             src="/imagenes/logo.png"
             alt="Logo de El Artesano Beach House"
-            width={100}
-            height={40}
+            width={1536}
+            height={1024}
             priority
             className="brand-logo"
           />
@@ -213,7 +263,7 @@ export default function PublicHome() {
             </h1>
             <p className="hero-text">{sitio.descripcionBreve}</p>
 
-            <a className="hero-location" href={sitio.mapsUrl} target="_blank" rel="noreferrer">
+            <a className="hero-location" href={sitio.mapsUrl} target="_blank" rel="noopener noreferrer">
               📍 {sitio.ubicacion}
               <span aria-hidden="true">↗</span>
             </a>
@@ -318,7 +368,7 @@ export default function PublicHome() {
               Un destino <em>cercano a la naturaleza.</em>
             </h2>
             <p>{sitio.ubicacion}</p>
-            <a className="button button-primary" href={sitio.mapsUrl} target="_blank" rel="noreferrer">
+            <a className="button button-primary" href={sitio.mapsUrl} target="_blank" rel="noopener noreferrer">
               Cómo llegar <span aria-hidden="true">↗</span>
             </a>
           </div>
@@ -433,6 +483,8 @@ export default function PublicHome() {
                     value={form.fullName}
                     onChange={(event) => updateField('fullName', event.target.value)}
                     placeholder="Tu nombre completo"
+                    maxLength={MAX_NAME_LENGTH}
+                    autoComplete="name"
                     aria-invalid={Boolean(errors.fullName)}
                   />
                   {errors.fullName ? <small>{errors.fullName}</small> : null}
@@ -445,6 +497,8 @@ export default function PublicHome() {
                     value={form.phone}
                     onChange={(event) => updateField('phone', event.target.value)}
                     placeholder="8888-8888"
+                    maxLength={MAX_PHONE_LENGTH}
+                    autoComplete="tel"
                     aria-invalid={Boolean(errors.phone)}
                   />
                   {errors.phone ? <small>{errors.phone}</small> : null}
@@ -457,6 +511,8 @@ export default function PublicHome() {
                     value={form.email}
                     onChange={(event) => updateField('email', event.target.value)}
                     placeholder="correo@ejemplo.com"
+                    maxLength={MAX_EMAIL_LENGTH}
+                    autoComplete="email"
                     aria-invalid={Boolean(errors.email)}
                   />
                   {errors.email ? <small>{errors.email}</small> : null}
@@ -506,8 +562,10 @@ export default function PublicHome() {
                   <input
                     type="number"
                     min="1"
+                    max={selectedCabin?.capacidad ?? undefined}
                     value={form.adults}
                     onChange={(event) => updateField('adults', event.target.value)}
+                    inputMode="numeric"
                     aria-invalid={Boolean(errors.adults)}
                   />
                   {errors.adults ? <small>{errors.adults}</small> : null}
@@ -518,8 +576,10 @@ export default function PublicHome() {
                   <input
                     type="number"
                     min="0"
+                    max={selectedCabin?.capacidad ?? undefined}
                     value={form.children}
                     onChange={(event) => updateField('children', event.target.value)}
+                    inputMode="numeric"
                     aria-invalid={Boolean(errors.children)}
                   />
                   {errors.children ? <small>{errors.children}</small> : null}
@@ -532,7 +592,10 @@ export default function PublicHome() {
                     onChange={(event) => updateField('notes', event.target.value)}
                     rows={4}
                     placeholder="Escribe cualquier detalle que quieras compartir"
+                    maxLength={MAX_NOTES_LENGTH}
+                    aria-invalid={Boolean(errors.notes)}
                   />
+                  {errors.notes ? <small>{errors.notes}</small> : null}
                 </label>
               </div>
 
