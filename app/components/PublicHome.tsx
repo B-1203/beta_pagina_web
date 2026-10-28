@@ -2,7 +2,8 @@
 
 import Image from 'next/image';
 import { useMemo, useState, type FormEvent } from 'react';
-import { cabinas, galeria, servicios, sitio } from '../data/sitio';
+import { FaFacebook, FaInstagram } from 'react-icons/fa';
+import { cabinas, galeria, redesSociales, servicios, sitio } from '../data/sitio';
 import CabinGallery from './CabinGallery';
 import Gallery from './Gallery';
 
@@ -25,6 +26,11 @@ const today = new Date();
 const todayISO = new Date(today.getTime() - today.getTimezoneOffset() * 60000)
   .toISOString()
   .slice(0, 10);
+
+const socialNetworks = [
+  { name: 'Facebook', url: redesSociales.facebook, Icon: FaFacebook },
+  { name: 'Instagram', url: redesSociales.instagram, Icon: FaInstagram },
+];
 
 export default function PublicHome() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -241,9 +247,7 @@ export default function PublicHome() {
                 Elige tu <em>espacio ideal.</em>
               </h2>
             </div>
-            <p className="section-intro">
-              Texto provisional: cada cabina se puede adaptar a tus necesidades y preferencias para una estadía más cómoda.
-            </p>
+            
           </div>
 
           <div className="cabins-grid">
@@ -584,6 +588,37 @@ export default function PublicHome() {
             Reservar ahora <span aria-hidden="true">↗</span>
           </a>
         </div>
+
+        <section className="social-section" aria-labelledby="social-title">
+          <h2 id="social-title">Síguenos en nuestras redes sociales</h2>
+          <div className="social-links">
+            {socialNetworks.map(({ name, url, Icon }) =>
+              url ? (
+                <a
+                  className="social-link"
+                  href={url}
+                  key={name}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`Visitar El Artesano Beach House en ${name}`}
+                >
+                  <Icon aria-hidden="true" size={22} />
+                  <span>{name}</span>
+                </a>
+              ) : (
+                <span
+                  className="social-link social-link-disabled"
+                  key={name}
+                  aria-label={`${name} aún no está configurado`}
+                  aria-disabled="true"
+                >
+                  <Icon aria-hidden="true" size={22} />
+                  <span>{name}</span>
+                </span>
+              ),
+            )}
+          </div>
+        </section>
 
         <div className="footer-bottom">
           <span>© 2026 {sitio.nombreNegocio}</span>

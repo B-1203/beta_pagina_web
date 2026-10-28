@@ -17,6 +17,9 @@ export type Servicio = {
   icono: string;
 };
 
+const URL_FACEBOOK = 'https://www.facebook.com/share/1cwD3VyFoN/?mibextid=wwXIfr';
+const URL_INSTAGRAM = 'https://www.instagram.com/el.artesano.beach.house.cr?vrfl=OTdsMGR6Y2hra2Fo';
+
 export const sitio = {
   nombreNegocio: 'EL ARTESANO BEACH HOUSE',
   lema: 'Tu pausa ideal en la costa de Guanacaste',
@@ -35,9 +38,14 @@ export const sitio = {
   telefono: '506 8752 8879',
   whatsappHost: '506 8752 8879',
   horario: 'Lunes a Domingo · 7:00 a.m. a 8:00 p.m.',
-  correo: 'hola@cabinasplayalagarto.com',
+  correo: 'alejandro.merino@gmail.com',
   politicaPrivacidad:
     'Agradecemos tu confianza. Los datos de esta solicitud se usarán únicamente para gestionar tu consulta de reservación mediante WhatsApp.',
+};
+
+export const redesSociales = {
+  facebook: URL_FACEBOOK,
+  instagram: URL_INSTAGRAM,
 };
 
 export const servicios: Servicio[] = [
@@ -92,7 +100,7 @@ export const cabinas: Cabina[] = [
     capacidad: 6,
     habitaciones: 2,
     banos: 2,
-    precio: '₡50,000 X noche',
+    precio: 'Consultar precio',
     servicios: ['Cocina equipada', 'Wi‑Fi', 'TV'],
     imagenes: [
       '/imagenes/Casa/Imagen_artesano.jpg',
@@ -113,8 +121,8 @@ export const cabinas: Cabina[] = [
     nombre: 'Bungalow El Artesano #1',
     descripcion:
       'Texto provisional: espacio pensado para descansar en pareja o con amigos, con una distribución práctica y una sensación de tranquilidad.',
-    capacidad: 4,
-    habitaciones: 2,
+    capacidad: 2,
+    habitaciones: 1,
     banos: 1,
     precio: 'Consultar precio',
     servicios: ['Patio', 'Parqueo', 'Atención personalizada'],
@@ -131,9 +139,9 @@ export const cabinas: Cabina[] = [
     nombre: 'Bungalow El Artesano #2',
     descripcion:
       'Texto provisional: opción más amplia para familias o grupos pequeños que desean disfrutar de un alojamiento tranquilo y cercano a la naturaleza.',
-    capacidad: 5,
-    habitaciones: 2,
-    banos: 2,
+    capacidad: 2,
+    habitaciones: 1,
+    banos: 1,
     precio: 'Consultar precio',
     servicios: ['Terraza', 'Cocina', 'Wi‑Fi'],
     imagenes: ['/imagenes/CABINA/BONGALOW_NOCHE.jpeg',

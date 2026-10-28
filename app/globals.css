@@ -1056,6 +1056,60 @@ h3 {
   font-size: 1.3rem;
 }
 
+.social-section {
+  max-width: 1360px;
+  margin: 0 auto;
+  padding: 1.6rem 7vw 2.4rem;
+  border-top: 1px solid rgba(27, 42, 42, 0.08);
+  text-align: center;
+}
+
+.social-section h2 {
+  margin: 0 0 1.2rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.social-links {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+}
+
+.social-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-width: 142px;
+  justify-content: center;
+  padding: 0.7rem 1rem;
+  border: 1px solid rgba(27, 42, 42, 0.14);
+  color: var(--ink);
+  font-size: 0.82rem;
+  font-weight: 600;
+  transition: color 0.2s ease, border-color 0.2s ease, transform 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.social-link:not(.social-link-disabled):hover,
+.social-link:not(.social-link-disabled):focus-visible {
+  border-color: var(--coral);
+  color: var(--coral);
+  background: rgba(233, 125, 87, 0.08);
+  transform: translateY(-2px);
+}
+
+.social-link:focus-visible {
+  outline: 2px solid var(--coral);
+  outline-offset: 3px;
+}
+
+.social-link-disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
 .footer-bottom {
   padding-top: 1.2rem;
   padding-bottom: 2.3rem;
