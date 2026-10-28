@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useMemo, useState, type FormEvent } from 'react';
 import { cabinas, galeria, servicios, sitio } from '../data/sitio';
 import CabinGallery from './CabinGallery';
@@ -143,7 +144,14 @@ export default function PublicHome() {
     <>
       <header className="site-header">
         <a className="brand" href="#inicio" aria-label="Ir al inicio">
-          <span className="brand-mark">C</span>
+          <Image
+            src="/imagenes/logo.png"
+            alt="Logo de El Artesano Beach House"
+            width={100}
+            height={40}
+            priority
+            className="brand-logo"
+          />
           <span>
             {sitio.nombreNegocio}
             <span className="brand-dot">.</span>
