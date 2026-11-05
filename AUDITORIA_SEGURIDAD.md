@@ -169,3 +169,174 @@ El codigo de la aplicacion y sus controles de formulario no muestran XSS ni
 inyecciones confirmadas, pero este resultado no sustituye la verificacion de
 HTTPS, CDN, HSTS, logs, politica de privacidad y despliegue real. Debe
 mantenerse un proceso de actualizacion y escaneo de dependencias.
+
+## SEGUNDA AUDITORÍA DE SEGURIDAD — NOVIEMBRE 2026
+
+### 1. Resumen ejecutivo
+
+Se realizó una segunda revisión del código local después de los cambios
+solicitados por el cliente. No se identificaron vulnerabilidades explotables
+de alta confianza en el código ni en las dependencias de producción. El
+formulario continúa usando WhatsApp como único canal de contacto, con
+validación local y un número de destino fijo.
+
+El resultado actual es **APTO CON OBSERVACIONES**. La observación principal es
+la existencia de 8 vulnerabilidades moderadas en dependencias de desarrollo
+reportadas por `npm audit`, además de las verificaciones de Vercel/CDN que no
+pueden confirmarse desde el repositorio.
+
+### 2. Archivos analizados
+
+- `AUDITORIA_SEGURIDAD.md`
+- `next.config.ts`
+- `package.json` y `package-lock.json`
+- `.gitignore`
+- `app/components/PublicHome.tsx`
+- `app/data/sitio.ts`
+- `app/services/api.ts`
+- `app/layout.tsx`, páginas de `app/` y componentes de galería
+- Estado e historial Git local accesible
+
+### 3. Cambios recientes evaluados
+
+- Eliminación de Misión, Visión y Valores.
+- Incorporación de la descripción del entorno rural y la tranquilidad de Playa
+  Lagarto.
+- Eliminación del correo electrónico como medio de contacto.
+- WhatsApp como único canal de consultas y reservas.
+- Eliminación del servicio de aire acondicionado.
+- Revisión de `allowedDevOrigins`.
+
+No se encontraron referencias activas al correo electrónico en el formulario ni
+en la configuración revisada. No se encontró una configuración
+`allowedDevOrigins` en `next.config.ts`; por tanto, no se observó que se use
+como sustituto de controles de seguridad de producción. La configuración de
+producción continúa dependiendo de las cabeceras y del HTTPS efectivo del
+despliegue.
+
+### 4. Vulnerabilidades encontradas
+
+| # | Clasificación | Ubicación | Vulnerabilidad | Estado |
+|---|---|---|---|---|
+| 1 | MEDIA | Dependencias de desarrollo, mediante `minimatch` | `npm audit` reporta 8 vulnerabilidades moderadas relacionadas con denegación de servicio en herramientas de desarrollo de ESLint/TypeScript. | Pendiente; no afecta a dependencias de producción según `npm audit --omit=dev` |
+| 2 | MEDIA | Flujo de WhatsApp en `app/components/PublicHome.tsx` | Nombre, teléfono y comentarios se incluyen en una URL preparada por el navegador, con posible exposición en historial, telemetría o registros. | Riesgo residual funcional documentado |
+
+No se identificaron vulnerabilidades críticas o altas confirmadas en esta
+segunda auditoría. No se encontraron XSS, redirecciones abiertas, SSRF,
+secretos versionados, credenciales, `dangerouslySetInnerHTML`, `innerHTML`,
+`eval` ni `new Function`.
+
+### 5. Validación del formulario de WhatsApp
+
+El formulario valida nombre, teléfono, fechas, adultos, niños, cabina válida,
+comentarios y aceptación de privacidad. También aplica límites de longitud y
+formatos permitidos. El mensaje se normaliza con `trim()` y se codifica con
+`encodeURIComponent`.
+
+El destino se construye con el número fijo de `sitio.whatsappHost`, filtrado
+para conservar sus dígitos, mediante `https://wa.me/`. El usuario no controla
+el número de destino y no existe una redirección abierta. Los enlaces externos
+abiertos en nueva pestaña conservan `rel="noopener noreferrer"`.
+
+### 6. Seguridad de Next.js y cabeceras
+
+`next.config.ts` configura CSP, `X-Content-Type-Options: nosniff`,
+`Referrer-Policy: strict-origin-when-cross-origin`, `X-Frame-Options: DENY`,
+`Permissions-Policy` restrictiva y HSTS únicamente en producción.
+
+La CSP incluye `'unsafe-eval'` solamente cuando `NODE_ENV` es
+`development`; no se permite `'unsafe-eval'` en producción. La configuración
+de `allowedDevOrigins` no está presente en el archivo revisado y no modifica
+los controles de seguridad de producción.
+
+### 7. Correcciones implementadas
+
+No se aplicaron cambios al código durante esta auditoría. Las validaciones del
+formulario, el destino fijo de WhatsApp, las protecciones de enlaces externos
+y las cabeceras existentes fueron verificadas como conservadas.
+
+No se ejecutó `npm audit fix --force` ni se actualizaron versiones principales.
+
+### 8. Resultado de las pruebas técnicas
+
+| Prueba | Resultado |
+|---|---|
+| `npm audit` | 8 vulnerabilidades moderadas en dependencias de desarrollo |
+| `npm audit --omit=dev` | PASS: 0 vulnerabilidades |
+| `npm ls next react react-dom` | PASS: Next.js 16.4.3, React 19.2.8 y React DOM 19.2.8 |
+| `npx tsc --noEmit` | PASS |
+| `npm run lint` | PASS |
+| `npm run build` | PASS; `/` y `/cabinas` estáticas, `/cabinas/[id]` dinámica |
+| Pruebas contra Vercel/CDN | No ejecutadas; requieren acceso al entorno productivo |
+
+### 8.1. Análisis de `minimatch` y decisión de no actualizar
+
+El árbol de dependencias verificado es:
+
+- `eslint-config-next@16.4.3`
+  - `typescript-eslint@8.68.0`
+    - `@typescript-eslint/typescript-estree@8.68.0`
+      - `minimatch@10.2.6`
+- `eslint@9.39.5`
+  - `minimatch@3.1.5`, sin reporte de esta vulnerabilidad
+
+`npm audit --omit=dev` reportó 0 vulnerabilidades, por lo que las 8 alertas
+afectan únicamente a herramientas de desarrollo y no al entorno de producción.
+
+Se revisaron las actualizaciones disponibles dentro de la línea compatible:
+`eslint-config-next@16.4.4` y `16.4.5` siguen usando
+`typescript-eslint@^8.56.0`; sus versiones actuales de
+`@typescript-eslint/typescript-estree` mantienen `minimatch@^10.2.2`.
+La vulnerabilidad requiere `minimatch>=11.0.1`, por lo que esas
+actualizaciones parche no resuelven el aviso.
+
+La corrección automática propuesta por npm es
+`eslint-config-next@15.5.29`, que implica un cambio mayor y una degradación
+desde Next.js 16.4.3. No se aplicó. Tampoco se utilizó `overrides`, porque no
+se verificó compatibilidad de forzar `minimatch@11` con
+`@typescript-eslint/typescript-estree`.
+
+No se modificaron `package.json` ni `package-lock.json`; no se ejecutó
+`npm audit fix --force` y no se eliminaron paquetes necesarios para Next.js,
+TypeScript o ESLint.
+
+### 9. Verificación de configuración de Vercel
+
+No se afirmó una verificación del entorno productivo. Deben comprobarse
+manualmente HTTPS, HSTS, conservación de cabeceras por Vercel/CDN, ausencia
+de un servidor de desarrollo expuesto, política de registros y analítica, y
+que cualquier `NEXT_PUBLIC_API_URL` use HTTPS y no contenga secretos.
+
+### 10. Comparación con la auditoría anterior
+
+La auditoría anterior documentaba vulnerabilidades iniciales en Next.js, Sharp
+y dependencias transitivas, además de resultados de `npm audit` sin
+vulnerabilidades. La revisión actual confirma Next.js 16.4.3 y 0
+vulnerabilidades de producción, pero detecta 8 avisos moderados en
+dependencias de desarrollo. Estos avisos no justifican una actualización
+forzada o un cambio mayor automático.
+
+La validación del formulario, las cabeceras, los enlaces externos y el número
+fijo de WhatsApp no muestran regresiones confirmadas. La eliminación del correo
+no dejó validaciones activas ni referencias funcionales obsoletas.
+
+### 11. Recomendaciones antes del próximo despliegue
+
+1. Revisar la cadena de dependencias de desarrollo y actualizarla solo mediante
+   cambios compatibles y revisados; no usar `npm audit fix --force` sin
+   autorización.
+2. Verificar en el dominio productivo HTTPS, HSTS y todas las cabeceras.
+3. Confirmar que los registros, analítica y proxies no almacenen URLs completas
+   con datos del formulario.
+4. Revisar las variables de entorno de Vercel y mantener secretos fuera de
+   variables `NEXT_PUBLIC_*`.
+5. Mantener el escaneo de dependencias y la protección de la rama de
+   producción.
+
+### 12. Veredicto final
+
+**APTO CON OBSERVACIONES.** El código local y las dependencias de producción no
+presentan vulnerabilidades explotables confirmadas en esta revisión. La
+publicación queda condicionada a validar manualmente en Vercel/CDN HTTPS,
+HSTS, cabeceras, exposición del servidor, registros y configuración de
+variables de entorno.

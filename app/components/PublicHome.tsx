@@ -10,7 +10,6 @@ import Gallery from './Gallery';
 type FormState = {
   fullName: string;
   phone: string;
-  email: string;
   cabinId: string;
   checkIn: string;
   checkOut: string;
@@ -28,7 +27,6 @@ const todayISO = new Date(today.getTime() - today.getTimezoneOffset() * 60000)
   .slice(0, 10);
 const MAX_NAME_LENGTH = 100;
 const MAX_PHONE_LENGTH = 30;
-const MAX_EMAIL_LENGTH = 254;
 const MAX_NOTES_LENGTH = 1000;
 
 const socialNetworks = [
@@ -41,7 +39,6 @@ export default function PublicHome() {
   const [form, setForm] = useState<FormState>({
     fullName: '',
     phone: '',
-    email: '',
     cabinId: cabinas[0]?.id ?? '',
     checkIn: '',
     checkOut: '',
@@ -74,7 +71,6 @@ export default function PublicHome() {
     const nextErrors: FormErrors = {};
     const fullName = form.fullName.trim();
     const phone = form.phone.trim();
-    const email = form.email.trim();
     const notes = form.notes.trim();
     const adultsValue = Number(form.adults);
     const childrenValue = Number(form.children || '0');
@@ -94,10 +90,6 @@ export default function PublicHome() {
       phone.replace(/\D/g, '').length < 8
     ) {
       nextErrors.phone = 'Ingresa un número de teléfono válido.';
-    }
-
-    if (email && (email.length > MAX_EMAIL_LENGTH || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))) {
-      nextErrors.email = 'Ingresa un correo electrónico válido.';
     }
 
     if (!selectedCabinForValidation) {
@@ -173,7 +165,6 @@ export default function PublicHome() {
     const cabinName = selectedCabin?.nombre ?? 'cabina seleccionada';
     const fullName = form.fullName.trim();
     const phone = form.phone.trim();
-    const email = form.email.trim();
     const notes = form.notes.trim();
     const message = [
       `Hola ${sitio.nombreNegocio},`,
@@ -181,7 +172,6 @@ export default function PublicHome() {
       '',
       `Nombre: ${fullName}`,
       `Teléfono: ${phone}`,
-      email ? `Correo: ${email}` : undefined,
       `Fecha de entrada: ${form.checkIn}`,
       `Fecha de salida: ${form.checkOut}`,
       `Adultos: ${form.adults}`,
@@ -196,6 +186,8 @@ export default function PublicHome() {
     const whatsappUrl = `https://wa.me/${formattedPhone}?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
   };
+
+  const whatsappUrl = `https://wa.me/${sitio.whatsappHost.replace(/\D/g, '')}`;
 
   return (
     <>
@@ -270,7 +262,7 @@ export default function PublicHome() {
 
             <div className="hero-actions">
               <a className="button button-primary" href="#cabinas">
-                Conoce nuestras cabinas <span aria-hidden="true">↗</span>
+                Conoce nuestros alojamientos <span aria-hidden="true">↗</span>
               </a>
               <button type="button" className="button button-secondary" onClick={() => scrollToBooking()}>
                 Reservar por WhatsApp <span aria-hidden="true">↗</span>
@@ -291,7 +283,7 @@ export default function PublicHome() {
             <div>
               <p className="eyebrow">
                 <span className="eyebrow-line" />
-                Nuestras cabinas
+                Nuestros alojamientos
               </p>
               <h2>
                 Elige tu <em>espacio ideal.</em>
@@ -322,7 +314,7 @@ export default function PublicHome() {
                   ))}
                 </div>
                 <button type="button" className="card-link" onClick={() => scrollToBooking(cabin.id)}>
-                  Consultar esta cabina <span aria-hidden="true">↗</span>
+                  Consultar este alojamiento <span aria-hidden="true">↗</span>
                 </button>
               </article>
             ))}
@@ -396,7 +388,7 @@ export default function PublicHome() {
           <Gallery images={galeria} />
         </section>
 
-             <section className="section about-section" id="quienes-somos">
+        <section className="section about-section" id="quienes-somos">
           <div className="about-image" aria-label="Fotografía del lugar" role="img" />
 
           <div className="about-copy">
@@ -405,25 +397,24 @@ export default function PublicHome() {
               Quiénes somos
             </p>
             <h2>
-              Un lugar pensado para <em>disfrutar.</em>
+              Un refugio de <em>tranquilidad</em> en <em>Playa Lagarto.</em>
             </h2>
-            <p>{sitio.quienesSomos}</p>
-            <p>{sitio.historia}</p>
-
-            <div className="mission-block">
-              <div>
-                <span>Misión</span>
-                <p>{sitio.mision}</p>
-              </div>
-              <div>
-                <span>Valores</span>
-                <ul>
-                  {sitio.valores.map((valor) => (
-                    <li key={valor}>{valor}</li>
-                  ))}
-                </ul>
-              </div>
-            </div>
+            <p>
+              En El Artesano Beach House creemos que los mejores momentos se disfrutan con calma,
+              rodeados de <strong>naturaleza</strong> y lejos del ritmo acelerado de la vida cotidiana.
+            </p>
+            <p>
+              Estamos ubicados en <strong>Playa Lagarto</strong>, Santa Cruz, Guanacaste, en una{' '}
+              <strong>zona rural</strong> que conserva la tranquilidad y autenticidad de la región. A
+              diferencia de destinos turísticos más concurridos como Tamarindo o Nosara, nuestro entorno
+              ofrece una experiencia más serena, ideal para quienes buscan desconectarse del ruido,
+              descansar y disfrutar de la belleza natural de Guanacaste.
+            </p>
+            <p>
+              Más que un lugar donde hospedarse, queremos ofrecer un espacio acogedor donde nuestros
+              visitantes puedan disfrutar de la sencillez, la comodidad y la <strong>tranquilidad</strong>{' '}
+              que caracterizan nuestra comunidad.
+            </p>
           </div>
         </section>
 
@@ -443,13 +434,10 @@ export default function PublicHome() {
           <div className="contact-grid">
             <article className="contact-card">
               <span>WhatsApp</span>
-              <strong>{sitio.telefono}</strong>
+              <a href={whatsappUrl} target="_blank" rel="noopener noreferrer">
+                <strong>{sitio.telefono}</strong>
+              </a>
               <p>Consulta disponibilidad o solicita información en cualquier momento.</p>
-            </article>
-            <article className="contact-card">
-              <span>Correo</span>
-              <strong>{sitio.correo}</strong>
-              <p>Envía tus dudas y te responderemos con gusto.</p>
             </article>
             <article className="contact-card">
               <span>Horario</span>
@@ -505,21 +493,7 @@ export default function PublicHome() {
                 </label>
 
                 <label className="field">
-                  <span>Correo electrónico</span>
-                  <input
-                    type="email"
-                    value={form.email}
-                    onChange={(event) => updateField('email', event.target.value)}
-                    placeholder="correo@ejemplo.com"
-                    maxLength={MAX_EMAIL_LENGTH}
-                    autoComplete="email"
-                    aria-invalid={Boolean(errors.email)}
-                  />
-                  {errors.email ? <small>{errors.email}</small> : null}
-                </label>
-
-                <label className="field">
-                  <span>Cabina de interés</span>
+                  <span>Alojamiento de interés</span>
                   <select
                     value={form.cabinId}
                     onChange={(event) => updateField('cabinId', event.target.value)}
@@ -615,9 +589,9 @@ export default function PublicHome() {
             </form>
 
             <aside className="booking-summary" aria-live="polite">
-              <span className="summary-tag">Cabina seleccionada</span>
-              <h3>{selectedCabin?.nombre ?? 'Selecciona una cabina'}</h3>
-              <p>{selectedCabin?.descripcion ?? 'Texto provisional: descripción de la cabina seleccionada.'}</p>
+              <span className="summary-tag">Alojamiento seleccionado</span>
+              <h3>{selectedCabin?.nombre ?? 'Selecciona un alojamiento'}</h3>
+              <p>{selectedCabin?.descripcion ?? 'Texto provisional: descripción del alojamiento seleccionado.'}</p>
               <ul>
                 <li>
                   <strong>Capacidad:</strong> {selectedCabin?.capacidad ?? 0} huéspedes
@@ -686,8 +660,9 @@ export default function PublicHome() {
         <div className="footer-bottom">
           <span>© 2026 {sitio.nombreNegocio}</span>
           <div>
-            <a href={`tel:${sitio.whatsappHost}`}>{sitio.telefono}</a>
-            <a href={`mailto:${sitio.correo}`}>{sitio.correo}</a>
+            <a href={whatsappUrl} target="_blank" rel="noopener noreferrer">
+              WhatsApp: {sitio.telefono}
+            </a>
           </div>
         </div>
       </footer>

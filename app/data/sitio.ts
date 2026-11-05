@@ -29,16 +29,12 @@ export const sitio = {
     'Somos anfitriones locales que cuidamos cada detalle para que cada huésped viva una estadía cómoda, auténtica y relajante.',
   historia:
     'El proyecto nació para compartir la belleza de la zona con viajeros que buscan desconectarse y disfrutar de un alojamiento con carácter local.',
-  mision:
-    'Brindar una experiencia cálida, personalizada y memorable, con espacios inspirados en la tranquilidad del paisaje costarricense.',
-  valores: ['Atención cercana', 'Calidez humana', 'Naturaleza y descanso'],
   ubicacion: 'Playa Lagarto, Santa Cruz, Guanacaste, Costa Rica',
   mapsUrl:
     'https://maps.app.goo.gl/7dndTs6uVTcnMCRk8',
   telefono: '506 8752 8879',
   whatsappHost: '506 8752 8879',
   horario: 'Lunes a Domingo · 7:00 a.m. a 8:00 p.m.',
-  correo: 'alejandro.merino@gmail.com',
   politicaPrivacidad:
     'Agradecemos tu confianza. Los datos de esta solicitud se usarán únicamente para gestionar tu consulta de reservación mediante WhatsApp.',
 };
@@ -58,11 +54,6 @@ export const servicios: Servicio[] = [
     titulo: 'Wi‑Fi',
     descripcion: 'Conexión para trabajar o relajarse desde una vista serena y tranquila.',
     icono: '📶',
-  },
-  {
-    titulo: 'Aire acondicionado',
-    descripcion: 'Confort durante los días más calurosos de la zona.',
-    icono: '❄️',
   },
   {
     titulo: 'Terraza o patio',
@@ -96,7 +87,7 @@ export const cabinas: Cabina[] = [
     id: 'lagarto-01',
     nombre: 'Casa el Artesano',
     descripcion:
-      'Texto provisional: cabina acogedora con ambiente natural, ideal para parejas o viajeros que buscan descansar con comodidad y un estilo sencillo.',
+      'Texto provisional: alojamiento acogedor con ambiente natural, ideal para parejas o viajeros que buscan descansar con comodidad y un estilo sencillo.',
     capacidad: 6,
     habitaciones: 2,
     banos: 2,

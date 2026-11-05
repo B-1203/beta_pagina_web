@@ -349,37 +349,9 @@ h3 {
   font-size: 1.05rem;
 }
 
-.mission-block {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(180px, 1fr));
-  gap: 1.3rem;
-  margin-top: 2rem;
-}
-
-.mission-block div {
-  padding-top: 1rem;
-  border-top: 1px solid var(--line);
-}
-
-.mission-block span {
-  display: inline-block;
-  margin-bottom: 0.8rem;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  font-size: 0.7rem;
+.about-copy strong {
   color: var(--coral);
   font-weight: 700;
-}
-
-.mission-block p,
-.mission-block li {
-  color: var(--muted);
-  line-height: 1.7;
-}
-
-.mission-block ul {
-  margin: 0;
-  padding-left: 1.2rem;
 }
 
 .cabins-grid {
@@ -854,7 +826,7 @@ h3 {
 
 .contact-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1.2rem;
 }
 
@@ -1483,7 +1455,4 @@ h3 {
     padding: 2.5rem 1.2rem;
   }
 
-  .mission-block {
-    grid-template-columns: 1fr;
-  }
 }
