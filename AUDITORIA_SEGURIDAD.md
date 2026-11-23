@@ -340,3 +340,73 @@ presentan vulnerabilidades explotables confirmadas en esta revisión. La
 publicación queda condicionada a validar manualmente en Vercel/CDN HTTPS,
 HSTS, cabeceras, exposición del servidor, registros y configuración de
 variables de entorno.
+
+## ACTUALIZACIÓN DE SEGURIDAD — NEXT.JS 16.4.6
+
+### Cambios realizados
+
+- Next.js se actualizó de `16.4.3` a `16.4.6`, versión de seguridad indicada
+  por Next.js para resolver la advertencia de la versión anterior.
+- `eslint-config-next` se actualizó de `16.4.3` a `16.4.6`.
+- Solo se cambiaron estas dependencias directas; React y React DOM permanecen
+  en `19.2.8`. No se usaron `overrides` ni `npm audit fix --force`.
+- `package.json` fija las versiones exactas. `package-lock.json` actualiza
+  también `@next/env`, el plugin ESLint de Next y los binarios SWC a `16.4.6`.
+- `next.config.ts` no requirió cambios: la configuración tipada y `headers()`
+  se aceptaron en producción con Next.js `16.4.6`.
+
+### Resultado de seguridad y riesgos pendientes
+
+La advertencia conocida para Next.js `16.4.3` deja de aplicar al actualizar a
+`16.4.6`; las auditorías posteriores no reportan vulnerabilidades de Next.js.
+`npm audit --omit=dev` confirma cero vulnerabilidades en dependencias de
+producción.
+
+`npm audit` sigue reportando **7 vulnerabilidades moderadas**, todas asociadas
+al aviso `GHSA-g3hv-75wg-m249` de denegación de servicio en
+`minimatch@10.2.6`. La ruta verificada es
+`eslint-config-next@16.4.6` → `typescript-eslint@8.68.0` →
+`@typescript-eslint/typescript-estree@8.68.0` → `minimatch`. El paquete está
+marcado como dependencia de desarrollo y queda excluido de la auditoría de
+producción. No se forzó una versión incompatible ni se aplicó una corrección
+mayor; por ello, el riesgo residual se limita a tareas que carguen esa cadena
+de herramientas durante el desarrollo o CI.
+
+Durante `npm install`, npm también mostró un aviso de que el script `postinstall`
+de `unrs-resolver@1.12.2` no está cubierto por la política `allowScripts`.
+La instalación y el build finalizaron correctamente; no se modificó esa
+política ni se aprobó el script manualmente. Conviene revisar esa política en
+el entorno CI si aplica.
+
+No se detectaron incompatibilidades en la configuración ni regresiones en las
+funciones revisadas. La actualización no cambió CSS, páginas, datos del sitio,
+galerías, reservas, enlaces externos, SEO, ni cabeceras. `allowedDevOrigins`
+no está configurado; no se añadió ningún origen. El número de WhatsApp es fijo
+y el formulario mantiene sus validaciones y codifica el mensaje antes de abrir
+`https://wa.me/` con `noopener,noreferrer`. El código revisado no introduce
+HTML inseguro ni expone secretos; cualquier variable `NEXT_PUBLIC_*` debe
+seguir reservada para valores públicos. La configuración de Vercel y sus
+variables no se verificaron desde este entorno.
+
+### Resultados reales de las pruebas
+
+| Prueba | Resultado |
+|---|---|
+| `npm ls next eslint-config-next react react-dom` | PASS: Next.js y `eslint-config-next` `16.4.6`; React y React DOM `19.2.8` |
+| `npm audit` | 7 vulnerabilidades moderadas en la dependencia de desarrollo `minimatch`; comando devuelve código 1 por esos avisos |
+| `npm audit --omit=dev` | PASS: 0 vulnerabilidades |
+| `npx tsc --noEmit` | PASS |
+| `npm run lint` | PASS |
+| `npm run build` | PASS con Next.js `16.4.6` y Turbopack; rutas de inicio y cabinas generadas correctamente |
+| Solicitud HTTP local al build de producción | PASS: `200 OK`; CSP, HSTS, `nosniff`, Referrer-Policy, X-Frame-Options y Permissions-Policy presentes; CSP de producción no contiene `'unsafe-eval'` |
+| Compatibilidad de `next.config.ts` | PASS: se cargó al compilar y las cabeceras se sirvieron en el servidor local de producción |
+
+### Estado final
+
+**APTO CON OBSERVACIONES para preparar el despliegue.** La actualización
+solicitada está instalada y las comprobaciones de producción locales pasan.
+Antes o después del despliegue se debe verificar en Vercel el dominio HTTPS,
+las cabeceras efectivamente entregadas, las variables de entorno y que el
+entorno de producción use el lockfile actualizado. Los avisos moderados de
+`minimatch` quedan pendientes únicamente en desarrollo/CI. No se realizó
+`git commit` ni `git push`.

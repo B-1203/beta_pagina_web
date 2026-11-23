@@ -24,7 +24,7 @@ export const sitio = {
   nombreNegocio: 'EL ARTESANO BEACH HOUSE',
   lema: 'Tu pausa ideal en la costa de Guanacaste',
   descripcionBreve:
-    'Un refugio tranquilo para descansar, disfrutar de la naturaleza y vivir una experiencia cercana al mar en Playa Lagarto.',
+    'Un refugio tranquilo en Playa Lagarto, ideal para descansar, conectar con la naturaleza y disfrutar de la cercanía de hermosas playas como Nosara, Marbella y Junquillal, descubriendo los encantos de la costa de Guanacaste.',
   quienesSomos:
     'Somos anfitriones locales que cuidamos cada detalle para que cada huésped viva una estadía cómoda, auténtica y relajante.',
   historia:
@@ -32,8 +32,8 @@ export const sitio = {
   ubicacion: 'Playa Lagarto, Santa Cruz, Guanacaste, Costa Rica',
   mapsUrl:
     'https://maps.app.goo.gl/7dndTs6uVTcnMCRk8',
-  telefono: '506 8752 8879',
-  whatsappHost: '506 8752 8879',
+  telefono: '506 8735 8610',
+  whatsappHost: '506 8735 8610',
   horario: 'Lunes a Domingo · 7:00 a.m. a 8:00 p.m.',
   politicaPrivacidad:
     'Agradecemos tu confianza. Los datos de esta solicitud se usarán únicamente para gestionar tu consulta de reservación mediante WhatsApp.',
@@ -74,7 +74,6 @@ export const servicios: Servicio[] = [
 
 export const galeria: string[] = [
   '/imagenes/inicio.jpg',
-  '/imagenes/Galeria/info_mascotas.jpg',
   '/imagenes/Galeria/ARDILLA.jpeg',
   '/imagenes/Galeria/ATARDECER.jpeg',
   '/imagenes/Galeria/CONGOS.jpeg',
@@ -87,7 +86,7 @@ export const cabinas: Cabina[] = [
     id: 'lagarto-01',
     nombre: 'Casa el Artesano',
     descripcion:
-      'Texto provisional: alojamiento acogedor con ambiente natural, ideal para parejas o viajeros que buscan descansar con comodidad y un estilo sencillo.',
+      'Alojamiento acogedor cerca del mar, con ventilación natural, cocina totalmente equipada, televisión y Wi-Fi, ideal para disfrutar de una estadía cómoda, tranquila y relajante en un entorno natural.',
     capacidad: 6,
     habitaciones: 2,
     banos: 2,
@@ -111,7 +110,7 @@ export const cabinas: Cabina[] = [
     id: 'lagarto-02',
     nombre: 'Bungalow El Artesano #1',
     descripcion:
-      'Texto provisional: espacio pensado para descansar en pareja o con amigos, con una distribución práctica y una sensación de tranquilidad.',
+      'Alojamiento amplio y acogedor cerca del mar, ideal para familias o grupos pequeños que buscan comodidad y tranquilidad. Cuenta con una pequeña cocina, aire acondicionado y Wi-Fi para disfrutar de una estadía agradable en un entorno natural.',
     capacidad: 2,
     habitaciones: 1,
     banos: 1,
@@ -129,7 +128,7 @@ export const cabinas: Cabina[] = [
     id: 'lagarto-03',
     nombre: 'Bungalow El Artesano #2',
     descripcion:
-      'Texto provisional: opción más amplia para familias o grupos pequeños que desean disfrutar de un alojamiento tranquilo y cercano a la naturaleza.',
+      'Alojamiento amplio y acogedor cerca del mar, ideal para familias o grupos pequeños que buscan comodidad y tranquilidad. Cuenta con una pequeña cocina, aire acondicionado y Wi-Fi para disfrutar de una estadía agradable en un entorno natural.',
     capacidad: 2,
     habitaciones: 1,
     banos: 1,
